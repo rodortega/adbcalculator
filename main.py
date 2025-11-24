@@ -52,9 +52,9 @@ def calculate_average_daily_balance(csv_file_path, month_start=None, month_end=N
     # Create a dataframe with all dates in the period
     all_dates = pd.DataFrame({'DATE': date_range})
     
-    # Merge with actual balances, filling missing dates with 0 balance
+    # Merge with actual balances, forward-filling missing dates with previous balance
     complete_balances = all_dates.merge(daily_balances, on='DATE', how='left')
-    complete_balances['ENDING BALANCE'] = complete_balances['ENDING BALANCE'].fillna(0)
+    complete_balances['ENDING BALANCE'] = complete_balances['ENDING BALANCE'].fillna(method='ffill').fillna(0)
     
     # Calculate total days in the period
     total_days = len(complete_balances)
@@ -85,8 +85,7 @@ def calculate_average_daily_balance(csv_file_path, month_start=None, month_end=N
     return results
 
 def main():
-    # Example usage - replace with your CSV file path
-    csv_file_path = 'sample.csv'
+    csv_file_path = input("Enter the CSV file name (e.g., sample.csv): ").strip()
     
     try:
         results = calculate_average_daily_balance(csv_file_path)
