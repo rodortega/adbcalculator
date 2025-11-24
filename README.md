@@ -5,10 +5,11 @@ A Python tool to calculate the average daily balance from bank statement data. T
 ## Features
 
 - Calculate average daily balance from CSV transaction data
-- Automatically fills missing days with zero balance
+- Automatically carries forward previous balance for missing days
 - Supports custom date ranges or auto-detects from data
 - Provides detailed calculation breakdown
 - Handles multiple transactions per day (uses end-of-day balance)
+- Interactive user input for CSV file selection
 
 ## Installation
 
@@ -57,7 +58,7 @@ The program expects a CSV file with **no header** and **two columns**:
 ```
 
 **Note:** 
-- Dates don't need to be consecutive - missing days will be filled with 0 balance
+- Dates don't need to be consecutive - missing days will carry forward the previous day's balance
 - Multiple entries for the same day are allowed - the last entry will be used as the end-of-day balance
 - No header row should be present in the CSV file
 
@@ -67,14 +68,14 @@ The program expects a CSV file with **no header** and **two columns**:
 
 1. Create your CSV file with your transaction data (see format above)
 
-2. Edit `main.py` and update the CSV file path:
-```python
-csv_file_path = 'your_data.csv'  # Change this to your file path
-```
-
-3. Run the calculator:
+2. Run the calculator:
 ```bash
 python main.py
+```
+
+3. When prompted, enter the name of your CSV file:
+```
+Enter the CSV file name (e.g., sample.csv): your_data.csv
 ```
 
 ### Advanced Usage
@@ -130,8 +131,8 @@ The calculator:
 2. Sorts transactions chronologically
 3. For each date with multiple transactions, uses the last (end-of-day) balance
 4. Creates a complete date range for the calculation period
-5. Fills missing dates with 0 balance
-6. Sums all daily balances (including zero-balance days)
+5. Fills missing dates by carrying forward the previous day's balance
+6. Sums all daily balances
 7. Divides by the total number of days in the period
 
 ## License

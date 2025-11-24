@@ -54,7 +54,7 @@ def calculate_average_daily_balance(csv_file_path, month_start=None, month_end=N
     
     # Merge with actual balances, forward-filling missing dates with previous balance
     complete_balances = all_dates.merge(daily_balances, on='DATE', how='left')
-    complete_balances['ENDING BALANCE'] = complete_balances['ENDING BALANCE'].fillna(method='ffill').fillna(0)
+    complete_balances['ENDING BALANCE'] = complete_balances['ENDING BALANCE'].ffill().fillna(0)
     
     # Calculate total days in the period
     total_days = len(complete_balances)
@@ -71,7 +71,6 @@ def calculate_average_daily_balance(csv_file_path, month_start=None, month_end=N
         'end_date': end_date.strftime('%Y-%m-%d'),
         'actual_days_with_data': len(daily_balances),
         'total_days_in_period': total_days,
-        'days_with_zero_balance': total_days - len(daily_balances),
         'first_transaction_date': daily_balances['DATE'].min().strftime('%Y-%m-%d'),
         'last_transaction_date': daily_balances['DATE'].max().strftime('%Y-%m-%d'),
         'starting_balance': daily_balances['ENDING BALANCE'].iloc[0],
@@ -96,7 +95,6 @@ def main():
         print(f"Period: {results['start_date']} to {results['end_date']}")
         print(f"Total days in period: {results['total_days_in_period']}")
         print(f"Days with transactions: {results['actual_days_with_data']}")
-        print(f"Days with zero balance: {results['days_with_zero_balance']}")
         print(f"\nFirst transaction: {results['first_transaction_date']}")
         print(f"Last transaction: {results['last_transaction_date']}")
         print(f"\nStarting balance: PHP {results['starting_balance']:,.2f}")
