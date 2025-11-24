@@ -5,6 +5,7 @@ A Python tool to calculate the average daily balance from bank statement data. T
 ## Features
 
 - Calculate average daily balance from CSV transaction data
+- **Process single or multiple CSV files** for combined balance calculations
 - Automatically carries forward previous balance for missing days
 - Supports custom date ranges or auto-detects from data
 - Provides detailed calculation breakdown
@@ -64,7 +65,7 @@ The program expects a CSV file with **no header** and **two columns**:
 
 ## Usage
 
-### Basic Usage
+### Basic Usage (Single File)
 
 1. Create your CSV file with your transaction data (see format above)
 
@@ -73,27 +74,61 @@ The program expects a CSV file with **no header** and **two columns**:
 python main.py
 ```
 
-3. When prompted, enter the name of your CSV file:
+3. When prompted, choose whether to process multiple files:
+```
+Do you want to process multiple CSV files? (y/n): n
+```
+
+4. Enter the name of your CSV file:
 ```
 Enter the CSV file name (e.g., sample.csv): your_data.csv
 ```
 
+### Processing Multiple CSV Files
+
+If you have data split across multiple CSV files (e.g., different months or accounts), you can process them all together:
+
+1. Run the calculator:
+```bash
+python main.py
+```
+
+2. Choose to process multiple files:
+```
+Do you want to process multiple CSV files? (y/n): y
+```
+
+3. Enter each CSV file name (one per line), then press Enter on a blank line when done:
+```
+Enter CSV file names (one per line). Enter a blank line when done:
+CSV file: january.csv
+CSV file: february.csv
+CSV file: march.csv
+CSV file: 
+```
+
+4. The calculator will combine all files and calculate the average daily balance across all the data.
+
 ### Advanced Usage
 
-You can also use the function programmatically with custom date ranges:
+You can also use the functions programmatically:
 
 ```python
-from main import calculate_average_daily_balance
+from main import calculate_average_daily_balance, calculate_multiple_csv_files
 
-# Auto-detect date range from data
+# Single file with auto-detect date range
 results = calculate_average_daily_balance('sample.csv')
 
-# Or specify custom date range
+# Single file with custom date range
 results = calculate_average_daily_balance(
     'sample.csv',
     month_start='2024-01-01',
     month_end='2024-01-31'
 )
+
+# Multiple files
+csv_files = ['january.csv', 'february.csv', 'march.csv']
+results = calculate_multiple_csv_files(csv_files)
 
 print(f"Average Daily Balance: PHP {results['average_daily_balance']:,.2f}")
 ```
@@ -101,16 +136,50 @@ print(f"Average Daily Balance: PHP {results['average_daily_balance']:,.2f}")
 ## Output Example
 
 ```
+Average Daily Balance Calculator
+==================================================
+Do you want to process multiple CSV files? (y/n): n
+Enter the CSV file name (e.g., sample.csv): sample.csv
+
 ==================================================
 AVERAGE DAILY BALANCE CALCULATION
 ==================================================
 Period: 2024-01-01 to 2024-01-31
 Total days in period: 31
 Days with transactions: 10
-Days with zero balance: 21
 
 First transaction: 2024-01-01
 Last transaction: 2024-01-31
+
+Starting balance: PHP 15,000.00
+Ending balance: PHP 14,200.00
+
+Sum of all daily balances: PHP 159,700.75
+Average Daily Balance: PHP 5,151.64
+==================================================
+```
+
+### Multiple Files Output Example
+
+```
+Average Daily Balance Calculator
+==================================================
+Do you want to process multiple CSV files? (y/n): y
+
+Enter CSV file names (one per line). Enter a blank line when done:
+CSV file: january.csv
+CSV file: february.csv
+CSV file: 
+
+Processing 2 CSV files...
+
+==================================================
+AVERAGE DAILY BALANCE CALCULATION
+==================================================
+Files processed: 2
+Period: 2024-01-01 to 2024-02-29
+Total days in period: 60
+Days with transactions: 25
 
 Starting balance: PHP 15,000.00
 Ending balance: PHP 14,200.00
